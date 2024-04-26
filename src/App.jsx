@@ -7,18 +7,19 @@ import Footer from './components/Footer';
 import LogoDaniel from './assets/logo-footer.jpg'
 import { TURNS, WINNER_COMBOS } from './constants';
 import { WinnerModal } from './components/WinnerModal';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 
 const Tablero = styled.main`
   width: fit-content;
   height: 100vh;
-  margin: 40px auto;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
   @media screen and (min-width:600px) and (max-width:1000px){
     height: max-content;
   }
@@ -26,11 +27,30 @@ const Tablero = styled.main`
 
 const Titulo = styled.h1`
   color: #eee;
-  margin-bottom: 16px;
   font-family: 'Syncopate', sans-serif;
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
+  padding: 2rem 1rem;
+  background-color: #24242440;
+  border-radius: 20px;
+  font-size: 4rem;
   text-shadow: 5px 5px 10px black;
+  position: relative;
+  
+
+  &::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(2px);
+    z-index: -1;
+  }
+
+  @media screen and (max-width: 480px){
+    font-size: 2.5rem;
+    padding: 1.2rem 1rem;
+  }
 `
 
 const Game = styled.section`
@@ -42,27 +62,40 @@ const Game = styled.section`
 const Turn = styled.section`
   display: flex;
   justify-content: center;
-  margin: 15px auto;
+  margin: 0 auto 15px auto;
   width: fit-content;
   position: relative;
   border-radius: 10px;
   gap: 15px;
 `
 const BotonReset = styled.button`
-    padding: 8px 12px;
-  margin: 25px;
-  background: transparent;
-  border: 2px solid #eee;
+  padding: 8px 12px;
+  background-color: #24242474;
+  border: 2px solid #eeeeee4b;
   color: #eee;
+  backdrop-filter: blur(2px);
   width: 100px;
   border-radius: 5px;
   transition: 0.2s;
   font-weight: bold;
+  animation: showResetButton 1s ease-in-out;
   cursor: pointer;
 
   &:hover{
     background: #eee;
     color: #222;
+  }
+
+  @keyframes showResetButton {
+    0% {
+      transform: rotateZ(165deg);
+      opacity: 0;
+    }
+
+    100% {
+      transform: rotateZ(0deg);
+      opacity: 1;
+    }
   }
 `
 
@@ -135,11 +168,21 @@ function App() {
     }
   }
 
+  const resetGameNotify = () => toast('El tablero se ha reiniciado correctamente', {
+    icon: '✅',
+    style: {
+      backgroundColor: 'black',
+      color: 'white',
+      fontFamily: 'Syncopate, sans-serif',
+      fontSize: '0.7rem'
+    }
+  })
+
   return (
     <>
     <Tablero>
-      <Titulo>Tic Tac Toe</Titulo>
-      <BotonReset onClick={resetGame}>Empezar de nuevo</BotonReset>
+      <Titulo style={{ marginBottom: board.every(elemento => elemento === null) ? '4.1rem' : '0'}} >Tic Tac Toe</Titulo>
+      <BotonReset style={{ display: board.every(elemento => elemento === null) ? 'none' : 'inline-block'}} onClick={() => {resetGame(); resetGameNotify();}}>Empezar de nuevo</BotonReset>
       <Game>
         {
           board.map((square,index) => {
@@ -151,6 +194,7 @@ function App() {
           })
         }
       </Game>
+      <Toaster />
       <Turn>
         <Square isSelected={turn === TURNS.X ? true : false}>{TURNS.X}</Square>
         <Square isSelected={turn === TURNS.O ? true : false}>{TURNS.O}</Square>

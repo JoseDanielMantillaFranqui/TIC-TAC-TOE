@@ -2,7 +2,7 @@ import { Square } from "./Square";
 import styled from "styled-components";
 
 const Winner = styled.section`
-  position: absolute;
+  position: fixed;
   width: 98.8vw;
   height: 110vh;
   top: 0;
