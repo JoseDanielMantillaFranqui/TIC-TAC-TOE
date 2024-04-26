@@ -21,7 +21,7 @@
 
 body {
   background-color: #242424;
-  background-image: url('tic-tac-toe-background.svg');
+  background-image: url('/tic-tac-toe-background.svg');
   background-size: 200px 200px;
   z-index: -1;
   background-blend-mode: soft-light;
